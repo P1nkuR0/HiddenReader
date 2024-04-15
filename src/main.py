@@ -11,7 +11,7 @@ class TransparentTextWindow(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
 
-        self.text = "Hello, World!"
+        self.text = "【按住右键横向滑动一段距离可退出】"
         self.initUI()
 
     def initUI(self):
@@ -79,7 +79,6 @@ class TransparentTextWindow(QtWidgets.QWidget):
 def start():
     loguru_config.setup_logger("HiddenReader")
     config.config_init()
-    global app, w
     app = QtWidgets.QApplication(sys.argv)
     w = TransparentTextWindow()
     sys.exit(app.exec_())

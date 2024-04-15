@@ -10,8 +10,6 @@ from loguru import logger as log
 page_list = list()
 text_cache = ""
 text_source = None
-max_line = int(config.height / config.font_size / 2)
-max_char = int(config.width / config.font_size * 2.5)
 
 
 def read_file():
@@ -78,7 +76,8 @@ def split_page():
     line_num = 0
     line = ""
     char_num = 0
-    while line_num < max_line and read_file():
+    max_char = int(config.width / config.font_size * 1.45)
+    while line_num < config.line_num and read_file():
         while char_num < max_char and read_file():
             char = text_cache[0]
             if char == '\u0020': char = '\u3000'

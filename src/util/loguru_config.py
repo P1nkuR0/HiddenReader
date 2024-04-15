@@ -63,7 +63,7 @@ def setup_logger(log_title):
     logger.remove()
 
     logger.add(
-        "/mnt/logs/ChatRoom/" + log_title + "-{time:YYYY-MM-DD}.log",  # 日志文件名格式
+        "/mnt/logs/" + log_title + "/" + log_title + "-{time:YYYY-MM-DD}.log",  # 日志文件名格式
         level="INFO",
         rotation="1 day",  # 每天轮转
         retention="100 days",  # 保留100天的日志文件
@@ -71,9 +71,9 @@ def setup_logger(log_title):
         format=file_format  # 自定义日志格式
     )
 
-    logger.add(
-        sys.stdout,
-        level="DEBUG",
-        format=custom_console_format
-    )
+    # logger.add(
+    #     sys.stdout,
+    #     level="DEBUG",
+    #     format=custom_console_format
+    # )
 
