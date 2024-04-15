@@ -30,7 +30,7 @@ def save_all():
     config['main']['page'] = f"{page}"
     config['main']['font_size'] = f"{font_size}"
     config['main']['txt'] = f"{txt}"
-    config['main']['line_num'] = f"{txt}"
+    config['main']['line_num'] = f"{line_num}"
 
     # 写入到配置文件
     with config_file.open("w") as file:
