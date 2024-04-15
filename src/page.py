@@ -10,6 +10,7 @@ from loguru import logger as log
 page_list = list()
 text_cache = ""
 text_source = None
+begin = True
 
 
 def read_file():
@@ -45,29 +46,37 @@ def read_next(chunk_size=1000):
 
 
 def next_page():
+    global begin
     page_num = config.page
     while page_num + 1 >= len(page_list) and read_file():
         page_list.append(split_page())
-    if page_num + 1 < len(page_list):
+    if page_num + 1 < len(page_list) and not begin:
         page_num += 1
+    else:
+        begin = False
     config.config_save("page", page_num)
     config.page = page_num
     if page_num < len(page_list):
         return page_list[page_num]
     else:
-        return "error!"
+        return "page_num error!"
 
 
 def prev_page():
+    global begin
     page_num = config.page
-    if page_num > 0:
+    if page_num > 0 and not begin:
         page_num -= 1
+    else:
+        begin = False
+    while page_num >= len(page_list) and read_file():
+        page_list.append(split_page())
     config.config_save("page", page_num)
     config.page = page_num
     if page_num < len(page_list):
         return page_list[page_num]
     else:
-        return "error!"
+        return "page_num error!"
 
 
 def split_page():
@@ -76,7 +85,7 @@ def split_page():
     line_num = 0
     line = ""
     char_num = 0
-    max_char = int(config.width / config.font_size * 1.45)
+    max_char = int(config.width / config.font_size * 1.5)
     while line_num < config.line_num and read_file():
         while char_num < max_char and read_file():
             char = text_cache[0]
@@ -98,7 +107,7 @@ def split_page():
 def weighted_length(s):
     length = 0
     for char in s:
-        if '\u4e00' <= char <= '\u9fff' or '\u3000' <= char <= '\u303F' or '\uFF01' <= char <= '\uFF5E' or '\uFFE0' <= char <= '\uFFE6':
+        if '\u4E00' <= char <= '\u9FFF' or '\u3000' <= char <= '\u303F' or '\uFF01' <= char <= '\uFF5E' or '\uFFE0' <= char <= '\u2000' or '' <= char <= '\u206F':
             # 汉字范围是0x4E00到0x9FFF，全角符号范围是0xFF00到0xFFEF
             length += 2
         else:
