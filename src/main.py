@@ -11,7 +11,7 @@ class TransparentTextWindow(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
 
-        self.text = "【按住右键横向滑动一段距离可退出】"
+        self.text = "【按住右键横向滑动一段距离可退出】\n【按左键开始或恢复文本】\n【左键：下一页  右键：上一页】"
         self.initUI()
 
     def initUI(self):
