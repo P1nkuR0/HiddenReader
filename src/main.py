@@ -16,7 +16,7 @@ class TransparentTextWindow(QtWidgets.QWidget):
 
     def initUI(self):
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)  # 设置窗口背景透明
-        self.setWindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint)  # 无边框且窗口置顶
+        self.setWindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.Tool)  # 无边框且窗口置顶
 
         self.label = QtWidgets.QLabel(self)
         self.label.setText(self.text)
