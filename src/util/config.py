@@ -5,9 +5,10 @@
 
 import configparser
 from pathlib import Path
+from loguru import logger as log
 
 
-filename = "config.ini"
+__filename__ = "config.ini"
 # 默认配置
 x = 300
 y = 300
@@ -17,29 +18,36 @@ line_num = 4
 page = 0
 txt = "kt-fx.txt"
 font_size = 13
+key_pageUp = "W,A,Left"
+key_pageDown = "S,D,Right"
+key_pageHide = "Q,Down"
+key_pageShow = "E,Up"
+key_pageExit = "Escape"
 
 
 def save_all():
     config = configparser.ConfigParser()
-    config_file = get_config_file(filename)
+    config_file = get_config_file(__filename__)
     config.read(config_file)
-    config['main']['x'] = f"{x}"
-    config['main']['y'] = f"{y}"
-    config['main']['height'] = f"{height}"
-    config['main']['width'] = f"{width}"
-    config['main']['page'] = f"{page}"
-    config['main']['font_size'] = f"{font_size}"
-    config['main']['txt'] = f"{txt}"
-    config['main']['line_num'] = f"{line_num}"
 
-    # 写入到配置文件
+    # 获取所有全局变量
+    global_vars = {k: v for k, v in globals().items() if not k.startswith("__") and not callable(v)}
+    for var_name, var_value in global_vars.items():
+        config['main'][var_name] = f"{var_value}"
+
     with config_file.open("w") as file:
         config.write(file)
 
 
 def config_save(conf, value):
+    # 获取所有全局变量
+    global_vars = {k: v for k, v in globals().items() if not k.startswith("__") and not callable(v)}
+    if conf not in global_vars:
+        log.error(f"保存配置{conf}失败，没有找到对应的配置项！")
+        return
+
     config = configparser.ConfigParser()
-    config_file = get_config_file(filename)
+    config_file = get_config_file(__filename__)
     config.read(config_file)
     config['main'][conf] = f"{value}"
 
@@ -86,21 +94,14 @@ def config_init(config_filename="config.ini"):
     # 加载配置文件
     config = configparser.ConfigParser()
     config_file = get_config_file(config_filename)
-    global filename
-    filename = config_filename
+    global __filename__
+    __filename__ = config_filename
     config.read(config_file)
 
-    global x, y, height, width, page, font_size, txt, line_num
-
-    x = get_config(config, 'main', 'x', default_value=x, is_int=True)
-    y = get_config(config, 'main', 'y', default_value=y, is_int=True)
-    height = get_config(config, 'main', 'height', default_value=height, is_int=True)
-    width = get_config(config, 'main', 'width', default_value=width, is_int=True)
-    line_num = get_config(config, 'main', 'line_num', default_value=line_num, is_int=True)
-    page = get_config(config, 'main', 'page', default_value=page, is_int=True)
-    font_size = get_config(config, 'main', 'font_size', default_value=font_size, is_int=True)
-    txt = get_config(config, 'main', 'txt', default_value=txt)
-
+    # 获取所有全局变量
+    global_vars = {k: v for k, v in globals().items() if not k.startswith("__") and not callable(v)}
+    for var_name, var_value in global_vars.items():
+        globals()[var_name] = get_config(config, 'main', var_name, default_value=var_value, is_int=isinstance(var_value, int))
 
 if __name__ == '__main__':
     config_init()

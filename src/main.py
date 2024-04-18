@@ -80,7 +80,8 @@ class TransparentTextWindow(QtWidgets.QWidget):
     def keyPressEvent(self, event: QtGui.QKeyEvent):
         # 检查按下的键是否是Esc
         if event.key() == QtCore.Qt.Key_Escape:
-            self.close()
+            # self.close()
+            QtCore.QCoreApplication.instance().quit()
         # 检查按下的键是否是Enter
         elif (event.key() == QtCore.Qt.Key_Right or
               event.key() == QtCore.Qt.Key_D or
