@@ -44,6 +44,11 @@ def read_next(chunk_size=1000):
     else:
         return False
 
+def init_page():
+    next_page()
+    global begin
+    begin = True
+
 
 def next_page():
     global begin
@@ -54,7 +59,7 @@ def next_page():
         page_num += 1
     else:
         begin = False
-    config.config_save("page", page_num)
+    config.save_conf("page", page_num)
     config.page = page_num
     if page_num < len(page_list):
         return page_list[page_num]
@@ -71,7 +76,7 @@ def prev_page():
         begin = False
     while page_num >= len(page_list) and read_file():
         page_list.append(split_page())
-    config.config_save("page", page_num)
+    config.save_conf("page", page_num)
     config.page = page_num
     if page_num < len(page_list):
         return page_list[page_num]
@@ -85,8 +90,8 @@ def split_page():
     line_num = 0
     line = ""
     char_num = 0
-    max_char = int(config.width / config.font_size * 1.5)
-    while line_num < config.line_num and read_file():
+    max_char = int(config.width / config.fontSize * 1.5)
+    while line_num < config.lineNum and read_file():
         while char_num < max_char and read_file():
             char = text_cache[0]
             if char == '\u0020': char = '\u3000'
