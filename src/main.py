@@ -69,12 +69,43 @@ class TransparentTextWindow(QtWidgets.QWidget):
                 # 自定义手势
                 log.info(f"rightMouseReleaseEvent: mouseTravelled = {self.mouseTravelledX}")
                 if self.mouseTravelledX > 300:
-                    self.close()
+                    # self.close()
+                    QtCore.QCoreApplication.instance().quit()
 
     def leaveEvent(self, event):
         self.label.setText("")
         self.update()
         self.isHidden = True
+
+    def keyPressEvent(self, event: QtGui.QKeyEvent):
+        # 检查按下的键是否是Esc
+        if event.key() == QtCore.Qt.Key_Escape:
+            self.close()
+        # 检查按下的键是否是Enter
+        elif (event.key() == QtCore.Qt.Key_Right or
+              event.key() == QtCore.Qt.Key_D or
+              event.key() == QtCore.Qt.Key_S
+            ) and not self.isHidden:
+            self.text = page.next_page()
+            self.label.setText(self.text)  # 更新标签文本
+            self.update()  # 手动触发重绘
+        elif (event.key() == QtCore.Qt.Key_Left or
+            event.key() == QtCore.Qt.Key_A or
+            event.key() == QtCore.Qt.Key_W
+            ) and not self.isHidden:
+            self.text = page.prev_page()
+            self.label.setText(self.text)  # 更新标签文本
+            self.update()  # 手动触发重绘
+        elif event.key() == QtCore.Qt.Key_Q and not self.isHidden:
+            self.label.setText("")
+            self.update()
+            self.isHidden = True
+        elif event.key() == QtCore.Qt.Key_E and self.isHidden:
+            self.label.setText(self.text)  # 更新标签文本
+            self.update()  # 手动触发重绘
+            self.isHidden = False
+        else:
+            super().keyPressEvent(event)  # 对于其他键，调用基类的keyPressEvent方法
 
 def start():
     loguru_config.setup_logger("HiddenReader")
