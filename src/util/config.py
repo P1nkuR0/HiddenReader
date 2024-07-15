@@ -24,6 +24,7 @@ key_nextPage = "S,D,Right"
 key_hide = "Q,Down"
 key_show = "E,Up"
 key_exit = "Escape"
+key_search = "F"
 
 
 def save_all():

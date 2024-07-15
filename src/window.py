@@ -1,6 +1,6 @@
 import warnings
 from PyQt5 import QtWidgets, QtCore, QtGui
-from src.util import config, key_map
+from src.util import config, key_map, tk_util
 from src import page
 from loguru import logger as log
 
@@ -98,5 +98,12 @@ class TransparentTextWindow(QtWidgets.QWidget):
             self.label.setText(self.text)  # 更新标签文本
             self.update()  # 手动触发重绘
             self.isHidden = False
+        elif event.key() in key_map.qt_key_dict['search'] and not self.isHidden:
+            word = tk_util.get_user_input("请输入搜索内容:")
+            if word is not None and len(word) > 0:
+                self.text = page.search_word(word)
+                self.label.setText(self.text)
+                self.update()
+                self.isHidden = False
         else:
             super().keyPressEvent(event)  # 对于其他键，调用基类的keyPressEvent方法
