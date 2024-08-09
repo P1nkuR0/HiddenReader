@@ -12,6 +12,7 @@ page_list = list()
 text_cache = ""
 text_source = None
 begin = True
+already_read = False
 
 
 # 判断是否有后续文本，缓存存在或者可以读入新缓存则返回True。
@@ -22,8 +23,8 @@ def read_file():
 
 
 def read_next(chunk_size=1000):
-    global text_cache, text_source
-    if not text_source:
+    global text_cache, text_source, already_read
+    if not text_source and not already_read:
         text_source = list()
         try:
             # 使用with语句打开文件，确保文件最终会被关闭
@@ -34,6 +35,7 @@ def read_next(chunk_size=1000):
                 while len(cache) > 0:
                     text_source.append(cache)
                     cache = file.read(chunk_size)
+            already_read = True
         except FileNotFoundError:
             log.info("文件未找到")
             return False
